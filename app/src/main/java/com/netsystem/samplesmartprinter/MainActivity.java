@@ -71,17 +71,19 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Uri.Builder builder = new Uri.Builder();
 
-                // Path to the *.spfmtz format file on the device
-                String formatFilePath = "/storage/emulated/0/Download/smapri.spfmtz";
+                // API URL to download the *.spfmtz format file
+                String apiUrl = "http://192.168.101.56:3000/download/smapri.spfmtz";
 
                 // Log format file path
-                Log.d("MainActivity", "Format file path: " + formatFilePath);
+                Log.d("MainActivity", "Format file URL: " + apiUrl);
 
-                // Server protocol
+                // Server endpoint for printing
                 builder.scheme("http");
                 builder.encodedAuthority("localhost:8080");
                 builder.path("/Format/Print");
-                builder.appendQueryParameter("__format_archive_url", "file://" + formatFilePath);
+
+                // Add parameters for the print request
+                builder.appendQueryParameter("__format_archive_url", apiUrl);
                 builder.appendQueryParameter("__format_archive_update", "update");
                 builder.appendQueryParameter("__format_id_number", "1");
                 builder.appendQueryParameter("商品名", productName.getText().toString());
@@ -110,8 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("MainActivity", "Error creating URL: " + e.getMessage());
             }
         });
-    }
-
+}
     private void requestManageExternalStoragePermission() {
         Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
         Uri uri = Uri.fromParts("package", getPackageName(), null);
@@ -125,27 +126,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Quyền truy cập bộ nhớ đã được cấp
                 Log.d("Permissions", "External storage permission granted");
-                // Tiếp tục thực hiện các hoạt động cần quyền này
             } else {
-                // Quyền truy cập bộ nhớ bị từ chối
                 Log.e("Permissions", "External storage permission denied");
-                // Xử lý khi quyền bị từ chối, ví dụ: hiển thị thông báo cho người dùng
             }
         } else if (requestCode == REQUEST_MANAGE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Quyền quản lý bộ nhớ đã được cấp
                 Log.d("Permissions", "Manage external storage permission granted");
-                // Tiếp tục thực hiện các hoạt động cần quyền này
             } else {
-                // Quyền quản lý bộ nhớ bị từ chối
                 Log.e("Permissions", "Manage external storage permission denied");
-                // Xử lý khi quyền bị từ chối, ví dụ: hiển thị thông báo cho người dùng
             }
         }
     }
-
 }
 
 
